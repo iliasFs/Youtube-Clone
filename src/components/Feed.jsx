@@ -3,38 +3,16 @@ import { useState, useEffect } from "react";
 import { Box, Stack, Typography } from "@mui/material";
 import { Sidebar, Videos } from "./";
 import { fetchFromAPI } from "../utils/fetchFromAPI";
-import axios from "axios";
 
 const Feed = () => {
-
-  const BASE_URL = "https://youtube-v31.p.rapidapi.com/search";
-
-const options = {
-  // method: 'GET', we dont need that because we are going to use Axios
-  params: {
-    maxResults: "50",
-  },
-  headers: {
-    "X-RapidAPI-Key": process.env.REACT_APP_RAPID_API_KEY,
-    "X-RapidAPI-Host": "youtube-v31.p.rapidapi.com",
-  },
-};
-
- const fetchFromAPI = async () => {
-  const { data } = await axios.get(`${BASE_URL}`, options);
-  return data;
-};
- 
-
   const [selectedCategory, setSelectedCategory] = useState("New");
-  const [videos, setVideos] = useState([])
-
+  const [videos, setVideos] = useState([]);
 
   useEffect(() => {
-      fetchFromAPI().then((data)=>{setVideos(data.items)})
-  }, []);
-
-  console.log(videos)
+    fetchFromAPI(`search?part=snippet&q=${selectedCategory}`).then((data) => {
+      setVideos(data.items);
+    });
+  }, [selectedCategory]);
 
   return (
     <Stack sx={{ flexDirection: { sx: "column", md: "row" } }}>
